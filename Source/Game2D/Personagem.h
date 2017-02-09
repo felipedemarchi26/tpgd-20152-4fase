@@ -23,6 +23,9 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	FORCEINLINE int GetCoins() const { return Coins; }
+	FORCEINLINE void SetCoins(int NewCoins) { Coins = NewCoins; }
+
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -37,8 +40,19 @@ private:
 	UPROPERTY(EditAnywhere)
 		class UPaperFlipbook* Walking;
 
+	UPROPERTY(EditAnywhere)
+		int Coins;
+
 	void Move(float Value);
 	
 	void UpdateFlipbook();
+
+	void UpdateFlipbookRotation();
 	
+	void TouchStarted(const ETouchIndex::Type FinderIndex,
+		const FVector Location);
+
+	void TouchStopped(const ETouchIndex::Type FinderIndex,
+		const FVector Location);
+
 };
