@@ -43,6 +43,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		int Coins;
 
+	UPROPERTY(EditAnywhere)
+		UChildActorComponent* ChildGun;
+
 	void Move(float Value);
 	
 	void UpdateFlipbook();

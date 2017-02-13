@@ -14,6 +14,10 @@ APersonagem::APersonagem() {
 	Camera->OrthoWidth = 2048.0f;
 	Camera->SetupAttachment(CameraBoom);
 
+	ChildGun = CreateDefaultSubobject<UChildActorComponent>
+		(TEXT("ChildGun"));
+	ChildGun->SetupAttachment(GetSprite());
+
 	GetCapsuleComponent()->bGenerateOverlapEvents = true;
 }
 
