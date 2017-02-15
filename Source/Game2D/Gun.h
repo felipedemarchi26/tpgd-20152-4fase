@@ -32,4 +32,7 @@ private:
 	UPROPERTY(EditAnywhere)
 		class UPaperSpriteComponent* Sprite;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ABullet> Bullet;
+
 };

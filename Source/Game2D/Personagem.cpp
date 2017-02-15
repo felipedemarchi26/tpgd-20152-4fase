@@ -3,6 +3,7 @@
 #include "Game2D.h"
 #include "Personagem.h"
 #include "PaperFlipbookComponent.h"
+#include "Gun.h"
 
 APersonagem::APersonagem() {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -34,9 +35,13 @@ void APersonagem::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APersonagem::OnStartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &APersonagem::OnStopFire);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &APersonagem::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &APersonagem::TouchStopped);
+
+
 }
 
 void APersonagem::Tick(float DeltaSeconds) {
@@ -82,4 +87,22 @@ void APersonagem::TouchStopped(const ETouchIndex::Type FinderIndex,
 
 	StopJumping();
 
+}
+
+void APersonagem::OnStartFire() {
+	if (ChildGun != nullptr && 
+		ChildGun->GetChildActor()->IsA(AGun::StaticClass())) {
+
+		AGun* Gun = Cast<AGun>(ChildGun->GetChildActor());
+		Gun->StartFire();
+	}
+}
+
+void APersonagem::OnStopFire() {
+	if (ChildGun != nullptr &&
+		ChildGun->GetChildActor()->IsA(AGun::StaticClass())) {
+
+		AGun* Gun = Cast<AGun>(ChildGun->GetChildActor());
+		Gun->StopFire();
+	}
 }

@@ -3,6 +3,7 @@
 #include "Game2D.h"
 #include "Gun.h"
 #include "PaperSpriteComponent.h"
+#include "Bullet.h"
 
 // Sets default values
 AGun::AGun()
@@ -32,6 +33,7 @@ void AGun::Tick( float DeltaTime )
 
 void AGun::StartFire() {
 	UE_LOG(LogTemp, Warning, TEXT("Start Fire"));
+	DoFire();
 }
 
 void AGun::StopFire() {
@@ -39,5 +41,15 @@ void AGun::StopFire() {
 }
 
 void AGun::DoFire() {
-	UE_LOG(LogTemp, Warning, TEXT("Do Fire"));
+	if (AmmoAmount > 0) {
+		UWorld* World = GetWorld();
+		if (World != nullptr) {
+			FActorSpawnParameters SpawnParameters;
+			World->SpawnActor<ABullet>(Bullet,
+				RootComponent->GetComponentLocation(),
+				FRotator::ZeroRotator, SpawnParameters);
+			AmmoAmount--;
+			UE_LOG(LogTemp, Warning, TEXT("Do Fire"));
+		}
+	}
 }
