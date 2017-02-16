@@ -13,10 +13,14 @@ ABullet::ABullet()
 
 	CollisionComp = CreateDefaultSubobject<UBoxComponent>
 		(TEXT("CollisionComp"));
+	CollisionComp->bGenerateOverlapEvents = false;
+	CollisionComp->SetCollisionProfileName("BlockAll");
+	CollisionComp->OnComponentHit.AddDynamic(this, &ABullet::OnHit);
 	RootComponent = CollisionComp;
 
 	Sprite = CreateDefaultSubobject<UPaperFlipbookComponent>
 		(TEXT("Sprite"));
+	Sprite->SetCollisionProfileName("NoCollision");
 	Sprite->SetupAttachment(RootComponent);
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>
@@ -44,3 +48,17 @@ void ABullet::Tick( float DeltaTime )
 
 }
 
+void ABullet::OnHit(UPrimitiveComponent* HitComponent,
+	AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse,
+	const FHitResult& Hit) {
+
+	UE_LOG(LogTemp, Warning, TEXT("HIT"));
+
+	if (HitComponent != nullptr || OtherActor != nullptr
+		|| OtherComp != nullptr) {
+		
+		Destroy();
+
+	}
+
+}

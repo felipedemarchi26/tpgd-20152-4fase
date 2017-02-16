@@ -33,11 +33,15 @@ void AGun::Tick( float DeltaTime )
 
 void AGun::StartFire() {
 	UE_LOG(LogTemp, Warning, TEXT("Start Fire"));
-	DoFire();
+	if (GetWorld() != nullptr) {
+		GetWorldTimerManager().SetTimer(KeepShotting,
+			this, &AGun::DoFire, 0.2f, true);
+	}
 }
 
 void AGun::StopFire() {
 	UE_LOG(LogTemp, Warning, TEXT("Stop Fire"));
+	GetWorldTimerManager().ClearTimer(KeepShotting);
 }
 
 void AGun::DoFire() {
@@ -47,7 +51,7 @@ void AGun::DoFire() {
 			FActorSpawnParameters SpawnParameters;
 			World->SpawnActor<ABullet>(Bullet,
 				RootComponent->GetComponentLocation(),
-				FRotator::ZeroRotator, SpawnParameters);
+				RootComponent->GetComponentRotation(), SpawnParameters);
 			AmmoAmount--;
 			UE_LOG(LogTemp, Warning, TEXT("Do Fire"));
 		}
