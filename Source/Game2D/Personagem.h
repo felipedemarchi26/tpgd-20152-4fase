@@ -62,4 +62,8 @@ private:
 
 	void OnStopFire();
 
+	void NoGun();
+
+	void FirstGun();
+
 };

@@ -37,9 +37,12 @@ void APersonagem::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APersonagem::OnStartFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &APersonagem::OnStopFire);
+	PlayerInputComponent->BindAction("NoGun", IE_Pressed, this, &APersonagem::NoGun);
+	PlayerInputComponent->BindAction("FirstGun", IE_Pressed, this, &APersonagem::FirstGun);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &APersonagem::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &APersonagem::TouchStopped);
+
 
 
 }
@@ -91,6 +94,7 @@ void APersonagem::TouchStopped(const ETouchIndex::Type FinderIndex,
 
 void APersonagem::OnStartFire() {
 	if (ChildGun != nullptr && 
+		ChildGun->GetNumChildrenComponents() > 0 &&
 		ChildGun->GetChildActor()->IsA(AGun::StaticClass())) {
 
 		AGun* Gun = Cast<AGun>(ChildGun->GetChildActor());
@@ -100,9 +104,26 @@ void APersonagem::OnStartFire() {
 
 void APersonagem::OnStopFire() {
 	if (ChildGun != nullptr &&
+		ChildGun->GetNumChildrenComponents() > 0 &&
 		ChildGun->GetChildActor()->IsA(AGun::StaticClass())) {
 
 		AGun* Gun = Cast<AGun>(ChildGun->GetChildActor());
 		Gun->StopFire();
+	}
+}
+
+void APersonagem::NoGun() {
+	if (ChildGun != nullptr && ChildGun->GetNumChildrenComponents() > 0) {
+		ChildGun->DestroyChildActor();
+	}
+}
+
+void APersonagem::FirstGun() {
+	if (ChildGun != nullptr && ChildGun->GetNumChildrenComponents() == 0) {
+		ChildGun->SetChildActorClass(
+			StaticLoadClass(AGun::StaticClass(), NULL,
+				TEXT("Blueprint'/Game/Bluepritns/GunBP.GunBP_C'"))
+		);
+		ChildGun->CreateChildActor();
 	}
 }
