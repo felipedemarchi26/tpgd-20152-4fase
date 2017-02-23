@@ -26,6 +26,13 @@ public:
 	FORCEINLINE int GetCoins() const { return Coins; }
 	FORCEINLINE void SetCoins(int NewCoins) { Coins = NewCoins; }
 
+	UFUNCTION(BlueprintCallable, Category = "Shoot")
+	void OnStartFire();
+
+	UFUNCTION(BlueprintCallable, Category = "Shoot")
+	void OnStopFire();
+
+
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -46,6 +53,9 @@ private:
 	UPROPERTY(EditAnywhere)
 		UChildActorComponent* ChildGun;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class UUserWidget> HUDMobile;
+
 	void Move(float Value);
 	
 	void UpdateFlipbook();
@@ -57,10 +67,6 @@ private:
 
 	void TouchStopped(const ETouchIndex::Type FinderIndex,
 		const FVector Location);
-
-	void OnStartFire();
-
-	void OnStopFire();
 
 	void NoGun();
 

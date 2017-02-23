@@ -5,6 +5,14 @@
 #include "PaperFlipbookComponent.h"
 #include "Gun.h"
 
+#include "Blueprint/UserWidget.h"
+#include "Runtime/UMG/Public/UMG.h"
+#include "Runtime/UMG/Public/UMGStyle.h"
+#include "Runtime/UMG/Public/Slate/SObjectWidget.h"
+#include "Runtime/UMG/Public/IUMGModule.h"
+#include "Runtime/UMG/Public/Blueprint/UserWidget.h"
+#include "Runtime/UMG/Public/Blueprint/WidgetBlueprintLibrary.h"
+
 APersonagem::APersonagem() {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->TargetArmLength = 500.0f;
@@ -26,6 +34,22 @@ void APersonagem::BeginPlay() {
 	Super::BeginPlay();
 
 	GetSprite()->SetFlipbook(Idle);
+
+	if (HUDMobile != NULL) {
+		UWorld* World = GetWorld();
+		if (World != nullptr) {
+			APlayerController* PlayerController =
+				UGameplayStatics::GetPlayerController(World, 0);
+			if (PlayerController != nullptr) {
+				UUserWidget* UserWidget =
+					UWidgetBlueprintLibrary::Create(World,
+						HUDMobile, PlayerController);
+				if (UserWidget != nullptr) {
+					UserWidget->AddToViewport();
+				}
+			}
+		}
+	}
 }
 
 void APersonagem::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
@@ -40,8 +64,8 @@ void APersonagem::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("NoGun", IE_Pressed, this, &APersonagem::NoGun);
 	PlayerInputComponent->BindAction("FirstGun", IE_Pressed, this, &APersonagem::FirstGun);
 
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &APersonagem::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &APersonagem::TouchStopped);
+	//PlayerInputComponent->BindTouch(IE_Pressed, this, &APersonagem::TouchStarted);
+	//PlayerInputComponent->BindTouch(IE_Released, this, &APersonagem::TouchStopped);
 
 
 
