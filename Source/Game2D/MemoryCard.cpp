@@ -4,6 +4,7 @@
 #include "MemoryCard.h"
 #include "PaperSpriteComponent.h"
 #include "PaperSprite.h"
+#include "MemoryGamePawn.h"
 
 
 // Sets default values
@@ -38,5 +39,13 @@ void AMemoryCard::OnTouchBegin(ETouchIndex::Type type,
 	UPrimitiveComponent* TouchedComponent) {
 
 	UE_LOG(LogTemp, Warning, TEXT("It works!"));
+
+	UWorld* World = GetWorld();
+
+	if (World != nullptr) {
+		AMemoryGamePawn* Pawn = Cast<AMemoryGamePawn>
+			(UGameplayStatics::GetPlayerController
+			(World, 0)->GetControlledPawn());
+	}
 
 }
