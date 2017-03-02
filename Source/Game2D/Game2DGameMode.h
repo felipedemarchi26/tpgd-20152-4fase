@@ -13,6 +13,9 @@ class GAME2D_API AGame2DGameMode : public AGameMode
 {
 	GENERATED_BODY()
 	
+public:
+
+	AGame2DGameMode();
 	
 	
 	
