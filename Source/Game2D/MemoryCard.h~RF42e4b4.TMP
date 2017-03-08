@@ -22,7 +22,7 @@ public:
 
 	int GetIndex();
 
-	void TurnOff();
+
 
 private:
 

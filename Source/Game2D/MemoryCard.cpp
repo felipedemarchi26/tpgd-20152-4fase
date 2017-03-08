@@ -41,11 +41,30 @@ void AMemoryCard::OnTouchBegin(ETouchIndex::Type type,
 	UE_LOG(LogTemp, Warning, TEXT("It works!"));
 
 	UWorld* World = GetWorld();
-
 	if (World != nullptr) {
+		/*APawn* Pawn = UGameplayStatics::GetPlayerController(World, 0)->
+			GetControlledPawn();
+		AMemoryGamePawn* MemoryPawn = Cast<AMemoryGamePawn>(Pawn);*/
 		AMemoryGamePawn* Pawn = Cast<AMemoryGamePawn>
 			(UGameplayStatics::GetPlayerController
 			(World, 0)->GetControlledPawn());
+
+		if (!bTurned && !Pawn->IsFreeze()) {
+			Sprite->SetSprite(OpenedSprite);
+			bTurned = true;
+
+			Pawn->AddCard(this);
+			Pawn->CheckCards();
+		}
 	}
 
+}
+
+int AMemoryCard::GetIndex() {
+	return Index;
+}
+
+void AMemoryCard::TurnOff() {
+	Sprite->SetSprite(ClosedSprite);
+	bTurned = false;
 }

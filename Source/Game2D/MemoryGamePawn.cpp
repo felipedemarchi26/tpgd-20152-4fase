@@ -2,6 +2,7 @@
 
 #include "Game2D.h"
 #include "MemoryGamePawn.h"
+#include "MemoryCard.h"
 
 
 // Sets default values
@@ -41,3 +42,41 @@ void AMemoryGamePawn::SetupPlayerInputComponent(class UInputComponent* InputComp
 
 }
 
+void AMemoryGamePawn::AddCard(class AMemoryCard* Card) {
+	if (FirstCard == nullptr) {
+		FirstCard = Card;
+	} else if (SecondCard == nullptr) {
+		SecondCard = Card;
+	}
+}
+
+void AMemoryGamePawn::CheckCards() {
+	if (FirstCard != nullptr && SecondCard != nullptr) {
+		if (FirstCard->GetIndex() == SecondCard->GetIndex()) {
+			FirstCard->Destroy();
+			SecondCard->Destroy();
+			FirstCard = nullptr;
+			SecondCard = nullptr;
+		} else {
+			UWorld* World = GetWorld();
+			if (World != nullptr) {
+				GetWorldTimerManager().SetTimer(TimerTurnOff, this,
+					&AMemoryGamePawn::TurnCardsOff, 2.0f, true);
+				bFreeze = true;
+			}
+		}
+	}
+}
+
+void AMemoryGamePawn::TurnCardsOff() {
+	FirstCard->TurnOff();
+	SecondCard->TurnOff();
+	FirstCard = nullptr;
+	SecondCard = nullptr;
+	bFreeze = false;
+	GetWorldTimerManager().ClearTimer(TimerTurnOff);
+}
+
+bool AMemoryGamePawn::IsFreeze() {
+	return bFreeze;
+}
